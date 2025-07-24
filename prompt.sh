@@ -32,27 +32,7 @@ function __setup_prompt {
         fi
     }
 
-    # function __IN_EXIT_CODE_COLOR {
-    #     local exit_code=$?
-    #     local colored_text=$1
-    #     local RESET='\[\e[0;0m\]'
-    #     local RED='\[\e[0;31m\]'; END_RED=$RESET
-    #     local GREEN='\[\e[0;32m\]'; END_GREEN=$RESET
-    #     if [ $exit_code -eq 0 ]; then
-    #         echo -e ''${GREEN}${colored_text}${END_GREEN}
-    #     else
-    #         echo -e ''${RED}${colored_text}${END_RED}
-    #     fi
-    # }
-
-    # PS1='[\[$(__IN_EXIT_CODE_COLOR '\''\A'\'')\]'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
-    # PS1='[$(__IN_EXIT_CODE_COLOR '\''\A'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
-
-    # PS1='[$(eval '\''echo $(__IN_EXIT_CODE_COLOR '\''\A'\'')'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
-    # PS1='[$(__IN_EXIT_CODE_COLOR '\''\A'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
-
     PS1='[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '
-
     PS0=''${SC}${CUU1}$(eval 'echo $PS1')${RC}
 }
 
