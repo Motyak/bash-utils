@@ -13,26 +13,37 @@
 }
 
 function __setup_prompt {
-    local RESET='\[\e[0;0m\]'
-    local BLACK='\[\e[0;90m\]'; END_BLACK=$RESET
-    local BLUE='\[\e[0;34m\]'; END_BLUE=$RESET
+    local RESET='\e[0;0m'
+    local BLACK='\e[0;90m'
+    local BLUE='\e[0;34m'
 
-    local SC='\[\e7\]' # save cursor pos
-    local RC='\[\e8\]' # restore cursor pos
-    local CUU1='\[\e[1A\]' # move cursor up 1 row
+    local SC='\e7' # save cursor pos
+    local RC='\e8' # restore cursor pos
+    local CUU1='\e[1A' # move cursor up 1 row
 
-    function __IN_EXIT_CODE_COLOR {
+    function __EXIT_CODE_COLOR {
         local exit_code=$?
-        local colored_text=$1
-        local RESET='\e[0;0m'
-        local RED='\e[0;31m'; END_RED=$RESET
-        local GREEN='\e[0;32m'; END_GREEN=$RESET
+        local RED='\e[0;31m'
+        local GREEN='\e[0;32m'
         if [ $exit_code -eq 0 ]; then
-            printf ''${GREEN}${colored_text}${END_GREEN}
+            echo -e ${GREEN}
         else
-            printf ''${RED}${colored_text}${END_RED}
+            echo -e ${RED}
         fi
     }
+
+    # function __IN_EXIT_CODE_COLOR {
+    #     local exit_code=$?
+    #     local colored_text=$1
+    #     local RESET='\[\e[0;0m\]'
+    #     local RED='\[\e[0;31m\]'; END_RED=$RESET
+    #     local GREEN='\[\e[0;32m\]'; END_GREEN=$RESET
+    #     if [ $exit_code -eq 0 ]; then
+    #         echo -e ''${GREEN}${colored_text}${END_GREEN}
+    #     else
+    #         echo -e ''${RED}${colored_text}${END_RED}
+    #     fi
+    # }
 
     # PS1='[\[$(__IN_EXIT_CODE_COLOR '\''\A'\'')\]'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
     # PS1='[$(__IN_EXIT_CODE_COLOR '\''\A'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
@@ -40,7 +51,7 @@ function __setup_prompt {
     # PS1='[$(eval '\''echo $(__IN_EXIT_CODE_COLOR '\''\A'\'')'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
     # PS1='[$(__IN_EXIT_CODE_COLOR '\''\A'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
 
-    PS1='[$(__IN_EXIT_CODE_COLOR '\''\A'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '
+    PS1='[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '
 
     PS0=''${SC}${CUU1}$(eval 'echo $PS1')${RC}
 }
