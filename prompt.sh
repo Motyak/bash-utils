@@ -11,6 +11,10 @@ function __setup_prompt {
     local BLACK='\e[0;90m'; END_BLACK=$RESET
     local BLUE='\e[0;34m'; END_BLUE=$RESET
 
+    local SC='\e7' # save cursor pos
+    local RC='\e8' # restore cursor pos
+    local CUU1='\e[1A' # move cursor up 1 row
+
     function __IN_EXIT_CODE_COLOR {
         local exit_code=$?
         local colored_text=$1
@@ -25,6 +29,7 @@ function __setup_prompt {
     }
 
     PS1=''${DELIMIT}'[$(__IN_EXIT_CODE_COLOR '\''\A'\'')'${BLACK}'.$(date +%S%3N)'${END_BLACK}' '${BLUE}'\W'${END_BLUE}']\$ '${DELIMIT}
+    PS0=''${DELIMIT}${SC}${CUU1}$(eval 'echo $PS1')${RC}${DELIMIT}
 }
 
 __setup_prompt
