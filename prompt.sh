@@ -32,8 +32,8 @@ function __setup_prompt {
         fi
     }
 
-    PS1='[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '
-    PS0=''${SC}${CUU1}$(eval 'echo $PS1')${RC}
+    PS1='[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(printf %05d $((10#$(date +%S%3N)-5))) \['${BLUE}'\]\W\['${RESET}'\]]\$ '
+    PS0=''${SC}${CUU1}'[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '${RC}
 }
 
 __setup_prompt
