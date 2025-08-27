@@ -19,7 +19,20 @@ function __setup_prompt {
 
     local SC='\e7' # save cursor pos
     local RC='\e8' # restore cursor pos
-    local CUU1='\e[1A' # move cursor up 1 row
+
+    function __MV_CUR_UP {
+        local backup_exitcode=$?
+        local prompt_len
+        if [ "$PWD" == "$HOME" ]; then
+            prompt_len="17" # 16 + `~`
+        else
+            prompt_len="$((15 + $(basename "$PWD" | wc -c)))"
+        fi
+        local last_cmd_len; last_cmd_len="$(($(fc -ln -1 | sed 's/^[ \t]*//' | wc -c) - 1))"
+        local prompt_line_pos; prompt_line_pos="$(((prompt_len + last_cmd_len) / $(tput cols) + 1))"
+        echo -e '\e['${prompt_line_pos}'A'
+        return $backup_exitcode
+    }
 
     function __EXIT_CODE_COLOR {
         local exit_code=$?
@@ -33,7 +46,7 @@ function __setup_prompt {
     }
 
     PS1='[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(printf %05d $((10#$(date +%S%3N)-5))) \['${BLUE}'\]\W\['${RESET}'\]]\$ '
-    PS0=''${SC}${CUU1}'[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '${RC}
+    PS0=''${SC}'$(__MV_CUR_UP)[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '${RC}
 }
 
 __setup_prompt
