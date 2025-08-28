@@ -1,0 +1,19 @@
+=== bash prompt =======================================
+
+Currently supported by my bash prompt :
+
+- Single command in one prompt
+  -> with line continuations (PS2)
+    -> each fit on a single terminal line
+      -> OK
+    -> some doesn't fit on a single terminal line
+      -> NOT OK
+  -> without line continuations
+    -> fit or doesn't fit on a single terminal line
+      -> OK
+
+- Multiple commands in one prompt
+  -> NOT OK
+     (PS0 cannot differenciate so there will be one prompt per command)
+
+=======================================================
