@@ -20,6 +20,7 @@ function __setup_prompt {
     local SC='\e7' # save cursor pos
     local RC='\e8' # restore cursor pos
 
+    __PS2_COUNT=0 # env variable
     function __MV_CUR_UP {
         local backup_exitcode=$?
         local prompt_line_pos
@@ -33,8 +34,6 @@ function __setup_prompt {
                 prompt_len="$((15 + $(basename "$PWD" | wc -c)))"
             fi
             local last_cmd_len; last_cmd_len="$(($(fc -ln -1 | sed 's/^[ \t]*//' | wc -c) - 1))"
-            # `- 1` here because the cursor moves to a newline..
-            #                     ..when the row is filled ~~v
             prompt_line_pos="$(((prompt_len + last_cmd_len - 1) / $(tput cols) + 1))"
         fi
         echo -e '\e['${prompt_line_pos}'A'
