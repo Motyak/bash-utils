@@ -13,7 +13,6 @@ function __setup_prompt {
     local SC='\e7' # save cursor pos
     local RC='\e8' # restore cursor pos
 
-    __PS2_COUNT=0 # env variable
     function __MV_CUR_UP {
         local backup_exitcode=$?
         local prompt_line_pos
@@ -44,6 +43,7 @@ function __setup_prompt {
         fi
     }
 
+    __PS2_COUNT=0
     PS2='$((__PS2_COUNT += 1))\r> '
     PS1='[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(printf %05d $((10#$(date +%S%3N)-5))) \['${BLUE}'\]\W\['${RESET}'\]]\$ '
     PS0=''${SC}'$(__MV_CUR_UP)$((__PS2_COUNT = 0))\r[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '${RC}
