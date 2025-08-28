@@ -22,14 +22,21 @@ function __setup_prompt {
 
     function __MV_CUR_UP {
         local backup_exitcode=$?
-        local prompt_len
-        if [ "$PWD" == "$HOME" ]; then
-            prompt_len="17" # 16 + `~`
+        local prompt_line_pos
+        if [ "$__PS2_COUNT" -gt 0 ]; then
+            prompt_line_pos="$((__PS2_COUNT + 1))"
         else
-            prompt_len="$((15 + $(basename "$PWD" | wc -c)))"
+            local prompt_len
+            if [ "$PWD" == "$HOME" ]; then
+                prompt_len="17" # 16 + `~`
+            else
+                prompt_len="$((15 + $(basename "$PWD" | wc -c)))"
+            fi
+            local last_cmd_len; last_cmd_len="$(($(fc -ln -1 | sed 's/^[ \t]*//' | wc -c) - 1))"
+            # `- 1` here because the cursor moves to a newline..
+            #                     ..when the row is filled ~~v
+            prompt_line_pos="$(((prompt_len + last_cmd_len - 1) / $(tput cols) + 1))"
         fi
-        local last_cmd_len; last_cmd_len="$(($(fc -ln -1 | sed 's/^[ \t]*//' | wc -c) - 1))"
-        local prompt_line_pos; prompt_line_pos="$(((prompt_len + last_cmd_len) / $(tput cols) + 1))"
         echo -e '\e['${prompt_line_pos}'A'
         return $backup_exitcode
     }
@@ -45,8 +52,9 @@ function __setup_prompt {
         fi
     }
 
+    PS2='$((__PS2_COUNT += 1))\r> '
     PS1='[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(printf %05d $((10#$(date +%S%3N)-5))) \['${BLUE}'\]\W\['${RESET}'\]]\$ '
-    PS0=''${SC}'$(__MV_CUR_UP)[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '${RC}
+    PS0=''${SC}'$(__MV_CUR_UP)$((__PS2_COUNT = 0))\r[\[$(__EXIT_CODE_COLOR)\]\A\['${BLACK}'\].$(date +%S%3N) \['${BLUE}'\]\W\['${RESET}'\]]\$ '${RC}
 }
 
 __setup_prompt
