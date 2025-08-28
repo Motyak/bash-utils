@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Current issue:
-# When a multi-line command is typed (with trailing `\`)
-# then the evaluation of PS0 overwrites the wrong line
-# (to fix, we should count the number of lines everytime
-# $PS2 is evaluated, and then move the cursor N lines above
-# in the evaluation of $PS0)
-
 [ "${BASH_SOURCE[0]}" == "$0" ] && {
     >&2 echo "this script is meant to be sourced, not executed"
     exit 1
